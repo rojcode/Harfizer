@@ -17,9 +17,9 @@
 
 ## 🙏 Acknowledgements | قدردانی
 
-We extend our sincere thanks to the creators of the [nums2persian](https://www.npmjs.com/package/nums2persian) package — an excellent JavaScript utility that made number-to-Persian-word conversion accessible years ago. Inspired by their work, we created **Harfizer** to provide a fully typed, flexible, and extensible solution for modern TypeScript-based applications.
+We extend our sincere thanks to the creators of the [num2persian](https://www.npmjs.com/package/num2persian) package — an excellent JavaScript utility that made number-to-Persian-word conversion accessible years ago. Inspired by their work, we created **Harfizer** to provide a fully typed, flexible, and extensible solution for modern TypeScript-based applications.
 
-ما صمیمانه از تیم پکیج [nums2persian](https://www.npmjs.com/package/nums2persian) تشکر می‌کنیم؛ ابزاری ارزشمند که سال‌ها پیش امکان تبدیل اعداد به حروف فارسی را در جاوااسکریپت فراهم کرد. به عنوان یک برنامه‌نویس که درگیر توسعه‌ی نرم‌افزارهای فارسی‌زبان هستم، وظیفه خود دانستم تا نسخه‌ای مدرن، امن و قابل گسترش برای TypeScript توسعه دهم و آن را با جامعه به اشتراک بگذارم.
+ما صمیمانه از تیم پکیج [num2persian](https://www.npmjs.com/package/num2persian) تشکر می‌کنیم؛ ابزاری ارزشمند که سال‌ها پیش امکان تبدیل اعداد به حروف فارسی را در جاوااسکریپت فراهم کرد. به عنوان یک برنامه‌نویس که درگیر توسعه‌ی نرم‌افزارهای فارسی‌زبان هستم، وظیفه خود دانستم تا نسخه‌ای مدرن، امن و قابل گسترش برای TypeScript توسعه دهم و آن را با جامعه به اشتراک بگذارم.
 
 ---
 
