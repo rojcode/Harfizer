@@ -17,6 +17,7 @@ export type Lexicon = string[][];
  * @property {string[]} [customDecimalSuffixes] - Custom array of suffixes for the fractional part.
  * @property {string} [customNegativeWord] - Custom word to denote negative numbers.
  * @property {string} [customZeroWord] - Custom word to represent zero.
+ * @property {string} [customTimePrefix] - Custom prefix for time conversion (e.g. "ساعت" or any other text).
  */
 export interface ConversionOptions {
   useNegativeWord?: boolean;
@@ -25,6 +26,7 @@ export interface ConversionOptions {
   customDecimalSuffixes?: string[];
   customNegativeWord?: string;
   customZeroWord?: string;
+  customTimePrefix?: string;
 }
 
 /**
@@ -426,6 +428,57 @@ export class HarfizerConverter implements IConverter {
 
     // Construct and return the final word representation of the date.
     return `${dayWords} ${monthName} ${yearWords}`;
+  }
+
+  /**
+   * Converts a digital time string (HH:mm) to its Persian word representation.
+   *
+   * @param {string} timeStr - The time string in "HH:mm" format.
+   * @returns {string} The word representation of the time.
+   * @throws {Error} Throws an error if the time format is invalid or if time values are out of range.
+   */
+  public convertTimeToWords(timeStr: string): string {
+    // Split the time string using colon (":") as the separator.
+    const parts = timeStr.split(":");
+    if (parts.length !== 2) {
+      throw new Error("Invalid time format. Expected format 'HH:mm'.");
+    }
+    const [hourStr, minuteStr] = parts;
+
+    // Parse hours and minutes.
+    const hour = parseInt(hourStr, 10);
+    const minute = parseInt(minuteStr, 10);
+
+    if (isNaN(hour) || isNaN(minute)) {
+      throw new Error(
+        "Invalid time format. Hours and minutes should be numbers."
+      );
+    }
+
+    // Validate hour and minute ranges.
+    if (hour < 0 || hour > 23) {
+      throw new Error("Invalid hour value. Hour should be between 0 and 23.");
+    }
+    if (minute < 0 || minute > 59) {
+      throw new Error(
+        "Invalid minute value. Minute should be between 0 and 59."
+      );
+    }
+
+    // Retrieve the custom time prefix from configuration or use the default "ساعت".
+    const timePrefix = this.config.customTimePrefix ?? "ساعت";
+
+    // Convert the hour and minute values to their word representations.
+    const hourWords = this.convert(hour);
+    const minuteWords = this.convert(minute);
+
+    // Construct the final time string in words.
+    // If minutes are zero, return only the hour part.
+    if (minute === 0) {
+      return `${timePrefix} ${hourWords}`;
+    } else {
+      return `${timePrefix} ${hourWords} و ${minuteWords} دقیقه`;
+    }
   }
 
   /**

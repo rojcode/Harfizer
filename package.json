@@ -8,13 +8,23 @@
     "build": "tsc",
     "test": "jest"
   },
-  "keywords": [
+   "keywords": [
     "persian-numbers",
     "number-to-words",
     "persian-words",
     "harfizer",
     "num2persian",
-    "typescript"
+    "typescript",
+    "date-to-words",
+    "time-to-words",
+    "persian-date",
+    "persian-time",
+    "jalali-date",
+    "gregorian-date",
+    "date-conversion",
+    "time-conversion",
+    "persian-datetime",
+    "datetime-to-words"
   ],
   "repository": {
     "type": "git",
