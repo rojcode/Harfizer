@@ -157,6 +157,28 @@ converter.convertTripleToWords(215);
 ```
 
 ---
+## 📆 Date Conversion | تبدیل تاریخ
+
+Harfizer now supports converting dates to their Persian word representation using the `convertDateToWords` method. This method accepts a date string in either `YYYY/MM/DD` or `YYYY-MM-DD` format, along with an optional calendar type (`"jalali"` for Solar dates or `"gregorian"` for Gregorian dates, default is `"jalali"`).
+
+Harfizer اکنون از تبدیل تاریخ به حروف فارسی پشتیبانی می‌کند. با استفاده از متد `convertDateToWords` می‌توانید تاریخ‌ها را به رشته‌ای از حروف تبدیل کنید. این متد یک رشته تاریخ به فرمت `YYYY/MM/DD` یا `YYYY-MM-DD` و یک پارامتر تقویم اختیاری (`"jalali"` برای تاریخ شمسی یا `"gregorian"` برای تاریخ میلادی، پیش‌فرض `"jalali"`) را دریافت می‌کند.
+
+### Example | مثال
+
+```ts
+import { HarfizerConverter } from 'harfizer';
+
+const converter = new HarfizerConverter();
+
+// Convert a Jalali (Solar) date using dash format:
+console.log(converter.convertDateToWords("1404-03-24"));
+// Expected Output: "بیست و چهار خرداد یک هزار و چهارصد و چهار"
+
+// Convert a Gregorian date:
+console.log(converter.convertDateToWords("2023-04-05", "gregorian"));
+// Expected Output: "پنج آوریل دو هزار و بیست و سه"
+```
+
 
 ## 📏 Limitations | محدودیت‌ها
 
