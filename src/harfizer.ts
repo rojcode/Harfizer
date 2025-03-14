@@ -358,6 +358,77 @@ export class HarfizerConverter implements IConverter {
   }
 
   /**
+   * Converts a date string (Solar/Jalali or Gregorian) to its word representation.
+   *
+   * @param {string} dateStr - The date string in the format 'YYYY/MM/DD' or 'YYYY-MM-DD'.
+   * @param {'jalali' | 'gregorian'} [calendar='jalali'] - The calendar type, either 'jalali' or 'gregorian'.
+   * @returns {string} The word representation of the date.
+   * @throws {Error} Throws an error if the date format is invalid or the month is out of range.
+   */
+  public convertDateToWords(
+    dateStr: string,
+    calendar: "jalali" | "gregorian" = "jalali"
+  ): string {
+    // Split the date string by '/' or '-' and validate the format.
+    const parts = dateStr.split(/[-\/]/);
+    if (parts.length !== 3) {
+      throw new Error(
+        "Invalid date format. Expected format 'YYYY/MM/DD' or 'YYYY-MM-DD'."
+      );
+    }
+    const [yearStr, monthStr, dayStr] = parts;
+
+    // Parse month as a number and validate it.
+    const monthNum = parseInt(monthStr, 10);
+    if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+      throw new Error("Invalid month in date.");
+    }
+
+    // Define month names for Jalali and Gregorian calendars.
+    const jalaliMonths = [
+      "فروردین",
+      "اردیبهشت",
+      "خرداد",
+      "تیر",
+      "مرداد",
+      "شهریور",
+      "مهر",
+      "آبان",
+      "آذر",
+      "دی",
+      "بهمن",
+      "اسفند",
+    ];
+    const gregorianMonths = [
+      "ژانویه",
+      "فوریه",
+      "مارس",
+      "آوریل",
+      "مه",
+      "ژوئن",
+      "ژوئیه",
+      "اوت",
+      "سپتامبر",
+      "اکتبر",
+      "نوامبر",
+      "دسامبر",
+    ];
+
+    // Get the month name based on the calendar type.
+    const monthName =
+      calendar === "gregorian"
+        ? gregorianMonths[monthNum - 1]
+        : jalaliMonths[monthNum - 1];
+
+    // Convert the day and year to words using the convert method.
+    const dayWords = this.convert(dayStr);
+    const yearWords = this.convert(yearStr);
+
+    // Construct and return the final word representation of the date.
+    return `${dayWords} ${monthName} ${yearWords}`;
+  }
+
+  /**
    * Returns the default separator from the configuration or default constant.
    *
    * @param {ConversionOptions} [options] - Optional conversion options.

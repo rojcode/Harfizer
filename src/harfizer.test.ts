@@ -115,4 +115,25 @@ describe("HarfizerConverter", () => {
     // Expect custom zero word "zero"
     expect(zeroResult).toBe("zero");
   });
+
+  describe("Date conversion", () => {
+    test("Convert Jalali date to words using slash format (1404/03/24)", () => {
+      const result = converter.convertDateToWords("1404/03/24");
+      // Expected output: "بیست و چهار خرداد یک هزار و چهارصد و چهار"
+      expect(result).toBe("بیست و چهار خرداد یک هزار و چهارصد و چهار");
+    });
+
+    test("Convert Jalali date to words using dash format (1404-03-24)", () => {
+      const result = converter.convertDateToWords("1404-03-24");
+      // Expected output: "بیست و چهار خرداد یک هزار و چهارصد و چهار"
+      expect(result).toBe("بیست و چهار خرداد یک هزار و چهارصد و چهار");
+    });
+
+    test("Convert Gregorian date to words (2023-04-05)", () => {
+      const result = converter.convertDateToWords("2023-04-05", "gregorian");
+      // For day "05" -> "پنج" and month "04" -> "آوریل", year "2023" -> "دو هزار و بیست و سه"
+      // Expected output: "پنج آوریل دو هزار و بیست و سه"
+      expect(result).toBe("پنج آوریل دو هزار و بیست و سه");
+    });
+  });
 });
