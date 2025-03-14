@@ -15,6 +15,7 @@ export type Lexicon = string[][];
  * @property {string[]} [customDecimalSuffixes] - Custom array of suffixes for the fractional part.
  * @property {string} [customNegativeWord] - Custom word to denote negative numbers.
  * @property {string} [customZeroWord] - Custom word to represent zero.
+ * @property {string} [customTimePrefix] - Custom prefix for time conversion (e.g. "ساعت" or any other text).
  */
 export interface ConversionOptions {
     useNegativeWord?: boolean;
@@ -23,6 +24,7 @@ export interface ConversionOptions {
     customDecimalSuffixes?: string[];
     customNegativeWord?: string;
     customZeroWord?: string;
+    customTimePrefix?: string;
 }
 /**
  * Interface defining the conversion methods.
@@ -98,6 +100,23 @@ export declare class HarfizerConverter implements IConverter {
      * @throws {Error} Throws an error if the input format is invalid, the number is too large, or out of range.
      */
     convert(input: InputNumber, options?: ConversionOptions): string;
+    /**
+     * Converts a date string (Solar/Jalali or Gregorian) to its word representation.
+     *
+     * @param {string} dateStr - The date string in the format 'YYYY/MM/DD' or 'YYYY-MM-DD'.
+     * @param {'jalali' | 'gregorian'} [calendar='jalali'] - The calendar type, either 'jalali' or 'gregorian'.
+     * @returns {string} The word representation of the date.
+     * @throws {Error} Throws an error if the date format is invalid or the month is out of range.
+     */
+    convertDateToWords(dateStr: string, calendar?: "jalali" | "gregorian"): string;
+    /**
+     * Converts a digital time string (HH:mm) to its Persian word representation.
+     *
+     * @param {string} timeStr - The time string in "HH:mm" format.
+     * @returns {string} The word representation of the time.
+     * @throws {Error} Throws an error if the time format is invalid or if time values are out of range.
+     */
+    convertTimeToWords(timeStr: string): string;
     /**
      * Returns the default separator from the configuration or default constant.
      *

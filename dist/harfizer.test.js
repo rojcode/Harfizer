@@ -92,4 +92,49 @@ describe("HarfizerConverter", () => {
         // Expect custom zero word "zero"
         expect(zeroResult).toBe("zero");
     });
+    describe("Date conversion", () => {
+        test("Convert Jalali date to words using slash format (1404/03/24)", () => {
+            const result = converter.convertDateToWords("1404/03/24");
+            // Expected output: "بیست و چهار خرداد یک هزار و چهارصد و چهار"
+            expect(result).toBe("بیست و چهار خرداد یک هزار و چهارصد و چهار");
+        });
+        test("Convert Jalali date to words using dash format (1404-03-24)", () => {
+            const result = converter.convertDateToWords("1404-03-24");
+            // Expected output: "بیست و چهار خرداد یک هزار و چهارصد و چهار"
+            expect(result).toBe("بیست و چهار خرداد یک هزار و چهارصد و چهار");
+        });
+        test("Convert Gregorian date to words (2023-04-05)", () => {
+            const result = converter.convertDateToWords("2023-04-05", "gregorian");
+            // For day "05" -> "پنج" and month "04" -> "آوریل", year "2023" -> "دو هزار و بیست و سه"
+            // Expected output: "پنج آوریل دو هزار و بیست و سه"
+            expect(result).toBe("پنج آوریل دو هزار و بیست و سه");
+        });
+    });
+    describe("convertTimeToWords", () => {
+        let converter;
+        beforeEach(() => {
+            converter = new harfizer_1.HarfizerConverter();
+        });
+        test("should convert time '09:05' with default prefix", () => {
+            const result = converter.convertTimeToWords("09:05");
+            // Expected conversion: "ساعت نه و پنج دقیقه"
+            expect(result).toBe("ساعت نه و پنج دقیقه");
+        });
+        test("should convert time '18:00' with default prefix", () => {
+            const result = converter.convertTimeToWords("18:00");
+            // Expected conversion: "ساعت هجده"
+            expect(result).toBe("ساعت هجده");
+        });
+        test("should convert time with custom time prefix", () => {
+            const customConverter = new harfizer_1.HarfizerConverter({
+                customTimePrefix: "زمان",
+            });
+            const result = customConverter.convertTimeToWords("09:05");
+            // Expected conversion with custom prefix: "زمان نه و پنج دقیقه"
+            expect(result).toBe("زمان نه و پنج دقیقه");
+        });
+        test("should throw error for invalid time format", () => {
+            expect(() => converter.convertTimeToWords("9-05")).toThrow("Invalid time format. Expected format 'HH:mm'.");
+        });
+    });
 });

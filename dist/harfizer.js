@@ -192,6 +192,106 @@ class HarfizerConverter {
         return ((isNegative ? negPrefix : "") + wordParts.join(separator) + fractionPart);
     }
     /**
+     * Converts a date string (Solar/Jalali or Gregorian) to its word representation.
+     *
+     * @param {string} dateStr - The date string in the format 'YYYY/MM/DD' or 'YYYY-MM-DD'.
+     * @param {'jalali' | 'gregorian'} [calendar='jalali'] - The calendar type, either 'jalali' or 'gregorian'.
+     * @returns {string} The word representation of the date.
+     * @throws {Error} Throws an error if the date format is invalid or the month is out of range.
+     */
+    convertDateToWords(dateStr, calendar = "jalali") {
+        // Split the date string by '/' or '-' and validate the format.
+        const parts = dateStr.split(/[-\/]/);
+        if (parts.length !== 3) {
+            throw new Error("Invalid date format. Expected format 'YYYY/MM/DD' or 'YYYY-MM-DD'.");
+        }
+        const [yearStr, monthStr, dayStr] = parts;
+        // Parse month as a number and validate it.
+        const monthNum = parseInt(monthStr, 10);
+        if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+            throw new Error("Invalid month in date.");
+        }
+        // Define month names for Jalali and Gregorian calendars.
+        const jalaliMonths = [
+            "فروردین",
+            "اردیبهشت",
+            "خرداد",
+            "تیر",
+            "مرداد",
+            "شهریور",
+            "مهر",
+            "آبان",
+            "آذر",
+            "دی",
+            "بهمن",
+            "اسفند",
+        ];
+        const gregorianMonths = [
+            "ژانویه",
+            "فوریه",
+            "مارس",
+            "آوریل",
+            "مه",
+            "ژوئن",
+            "ژوئیه",
+            "اوت",
+            "سپتامبر",
+            "اکتبر",
+            "نوامبر",
+            "دسامبر",
+        ];
+        // Get the month name based on the calendar type.
+        const monthName = calendar === "gregorian"
+            ? gregorianMonths[monthNum - 1]
+            : jalaliMonths[monthNum - 1];
+        // Convert the day and year to words using the convert method.
+        const dayWords = this.convert(dayStr);
+        const yearWords = this.convert(yearStr);
+        // Construct and return the final word representation of the date.
+        return `${dayWords} ${monthName} ${yearWords}`;
+    }
+    /**
+     * Converts a digital time string (HH:mm) to its Persian word representation.
+     *
+     * @param {string} timeStr - The time string in "HH:mm" format.
+     * @returns {string} The word representation of the time.
+     * @throws {Error} Throws an error if the time format is invalid or if time values are out of range.
+     */
+    convertTimeToWords(timeStr) {
+        // Split the time string using colon (":") as the separator.
+        const parts = timeStr.split(":");
+        if (parts.length !== 2) {
+            throw new Error("Invalid time format. Expected format 'HH:mm'.");
+        }
+        const [hourStr, minuteStr] = parts;
+        // Parse hours and minutes.
+        const hour = parseInt(hourStr, 10);
+        const minute = parseInt(minuteStr, 10);
+        if (isNaN(hour) || isNaN(minute)) {
+            throw new Error("Invalid time format. Hours and minutes should be numbers.");
+        }
+        // Validate hour and minute ranges.
+        if (hour < 0 || hour > 23) {
+            throw new Error("Invalid hour value. Hour should be between 0 and 23.");
+        }
+        if (minute < 0 || minute > 59) {
+            throw new Error("Invalid minute value. Minute should be between 0 and 59.");
+        }
+        // Retrieve the custom time prefix from configuration or use the default "ساعت".
+        const timePrefix = this.config.customTimePrefix ?? "ساعت";
+        // Convert the hour and minute values to their word representations.
+        const hourWords = this.convert(hour);
+        const minuteWords = this.convert(minute);
+        // Construct the final time string in words.
+        // If minutes are zero, return only the hour part.
+        if (minute === 0) {
+            return `${timePrefix} ${hourWords}`;
+        }
+        else {
+            return `${timePrefix} ${hourWords} و ${minuteWords} دقیقه`;
+        }
+    }
+    /**
      * Returns the default separator from the configuration or default constant.
      *
      * @param {ConversionOptions} [options] - Optional conversion options.
