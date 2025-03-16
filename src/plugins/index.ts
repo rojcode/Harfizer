@@ -5,3 +5,4 @@ export * from "./chinesePlugin";
 export * from "./russianPlugin";
 export * from "./englishPlugin";
 export * from "./germanPlugin";
+export * from "./spanishPlugin";
