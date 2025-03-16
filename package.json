@@ -1,31 +1,31 @@
 {
   "name": "harfizer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
-  "main": "dist/harfizer.js",
-  "types": "dist/harfizer.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest"
   },
-   "keywords": [
-    "persian-numbers",
-    "number-to-words",
-    "persian-words",
-    "harfizer",
-    "num2persian",
-    "typescript",
-    "date-to-words",
-    "time-to-words",
-    "persian-date",
-    "persian-time",
-    "jalali-date",
-    "gregorian-date",
-    "date-conversion",
-    "time-conversion",
-    "persian-datetime",
-    "datetime-to-words"
-  ],
+ "keywords": [
+  "number-to-words",
+  "harfizer",
+  "num2words",
+  "typescript",
+  "date-to-words",
+  "time-to-words",
+  "date-conversion",
+  "time-conversion",
+  "datetime-to-words",
+  "persian",
+  "english",
+  "french",
+  "chinese",
+  "japanese",
+  "russian",
+  "german"
+]
   "repository": {
     "type": "git",
     "url": "https://github.com/rojcode/Harfizer"

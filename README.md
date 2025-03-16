@@ -1,261 +1,180 @@
 
-# Harfizer - Number, Date & Time to Persian Words  
-**تبدیل عدد، تاریخ و زمان به حروف فارسی با TypeScript**
 
-📘 English & فارسی Documentation
+# Harfizer — Say Your Numbers, Dates, and Times Out Loud (in Any Language!)
 
----
+**Harfizer** is a powerful package for converting numbers, dates, and times into words. It supports multiple languages including [🇮🇷 Persian](./docs/persian.md), [🇫🇷 French](./docs/french.md), [🇯🇵 Japanese](./docs/japanese.md), [🇨🇳 Chinese](./docs/chinese.md), [🇷🇺 Russian](./docs/russian.md), [🇩🇪 German](./docs/german.md), and [🇪🇸 Spanish](./docs/spanish.md). By using language-specific plugins, Harfizer allows you to easily convert numeric and temporal values into their textual representations.  
+If you prefer a language other than English, please check the respective documentation by clicking on the links provided above or at the end of this document.
 
-## 📦 Overview | نمای کلی
 
-**Harfizer** is a modern, TypeScript-native package for converting numbers into their **Persian word** representation.  
-It supports integers, decimals, and negative numbers with rich customization options (such as separators, lexicons, and decimal suffixes).
+## Table of Contents
+- [Harfizer — Say Your Numbers, Dates, and Times Out Loud (in Any Language!)](#harfizer--say-your-numbers-dates-and-times-out-loud-in-any-language)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Methods](#methods)
+    - [`convertNumber(input: InputNumber, options?: ConversionOptions): string`](#convertnumberinput-inputnumber-options-conversionoptions-string)
+    - [`convertTripleToWords(num: InputNumber, lexicon?: any, _separator?: string): string`](#converttripletowordsnum-inputnumber-lexicon-any-_separator-string-string)
+    - [`convertDateToWords(dateStr: string, calendar?: "jalali" | "gregorian"): string`](#convertdatetowordsdatestr-string-calendar-jalali--gregorian-string)
+    - [`convertTimeToWords(timeStr: string): string`](#converttimetowordstimestr-string-string)
+  - [Examples](#examples)
+  - [Additional Options](#additional-options)
+  - [Other Language Plugins Documentation](#other-language-plugins-documentation)
+  - [License](#license)
 
-In addition to number conversion, Harfizer now supports converting dates and digital time strings into Persian words.  
-This means you can now convert both dates (Solar/Jalali or Gregorian) and digital time (HH:mm) to their Persian word equivalents.
+## Installation
 
-**Harfizer** یک پکیج تایپ‌اسکریپتی مدرن برای تبدیل اعداد به **حروف فارسی** است.  
-این پکیج از اعداد صحیح، اعشاری و منفی پشتیبانی می‌کند و با ارائه گزینه‌های متنوع، امکان سفارشی‌سازی کامل خروجی (مانند جداکننده‌ها، واژگان و پسوندهای اعشاری) را فراهم می‌سازد.
-
-همچنین، Harfizer از تبدیل تاریخ‌ها و زمان دیجیتال به حروف فارسی پشتیبانی می‌کند.  
-این بدان معناست که اکنون می‌توانید تاریخ (شمسی/میلادی) و زمان (به فرمت HH:mm) را به معادل حروف فارسی آن‌ها تبدیل کنید.
-
----
-
-## 🛠 Installation | نصب
+Install Harfizer via npm:
 
 ```bash
 npm install harfizer
 ```
 
----
+## Usage
 
-## 🚀 Basic Usage | استفاده ساده
+Import the plugin and the `CoreConverter` from the package:
 
-### Converting Numbers | تبدیل عدد
+```typescript
+import { CoreConverter, EnglishLanguagePlugin } from 'harfizer';
 
-```ts
-import { HarfizerConverter } from 'harfizer';
-
-console.log(HarfizerConverter.toWords(1234));
-// Output: "یک هزار و دویست و سی و چهار"
+const englishPlugin = new EnglishLanguagePlugin();
+const converter = new CoreConverter(englishPlugin);
 ```
 
-```ts
-console.log(HarfizerConverter.toWords("10500.25"));
-// Output: "ده هزار و پانصد ممیز بیست و پنج صدم"
-```
+## Methods
 
-### Converting Dates | تبدیل تاریخ
+### `convertNumber(input: InputNumber, options?: ConversionOptions): string`
+Converts a given number (integer or decimal, possibly negative) into its English textual form. It handles the fractional part digit-by-digit using the word "point".
 
-```ts
-import { HarfizerConverter } from 'harfizer';
+**Parameters:**
+- **input:** A number, numeric string, or bigint.
+- **options (optional):** An object to customize conversion:
+  - `customZeroWord` – overrides the default word for zero.
+  - `customNegativeWord` – overrides the default negative word.
+  - `customSeparator` – overrides the default token separator.
 
-const converter = new HarfizerConverter();
+**Returns:**  
+A string representing the number in words.
 
-// Convert a Jalali (Solar) date:
-console.log(converter.convertDateToWords("1404-03-24"));
-// Expected Output: "بیست و چهار خرداد یک هزار و چهارصد و چهار"
+**Example:**
 
-// Convert a Gregorian date:
-console.log(converter.convertDateToWords("2023-04-05", "gregorian"));
-// Expected Output: "پنج آوریل دو هزار و بیست و سه"
-```
+```typescript
+converter.convertNumber("123"); 
+// Output: "one hundred twenty-three"
 
-### Converting Time | تبدیل زمان
-
-```ts
-import { HarfizerConverter } from 'harfizer';
-
-const converter = new HarfizerConverter();
-
-console.log(converter.convertTimeToWords("09:05"));
-// Expected Output: "ساعت نه و پنج دقیقه"
-
-console.log(converter.convertTimeToWords("18:00"));
-// Expected Output: "ساعت هجده"
+converter.convertNumber("-456.78"); 
+// Output: "minus four hundred fifty-six point seven eight"
 ```
 
 ---
 
-## ➖ Negative Numbers | اعداد منفی
+### `convertTripleToWords(num: InputNumber, lexicon?: any, _separator?: string): string`
+Converts a three-digit (or fewer) number into its English textual representation.
 
-```ts
-console.log(HarfizerConverter.toWords(-72));
-// Output: "منفی هفتاد و دو"
-```
+**Parameters:**
+- **num:** A numeric value (up to 3 digits).
 
-```ts
-console.log(HarfizerConverter.toWords("-0.01"));
-// Output: "منفی یک صدم"
-```
+**Returns:**  
+A string representing the three-digit number (e.g., "four hundred fifty-six").
 
----
+**Example:**
 
-## ⚙️ Custom Options | تنظیمات سفارشی
-
-You can customize the output of Harfizer using the following options:
-
-| Option                 | Type         | Default      | توضیح فارسی                           |
-|------------------------|--------------|--------------|----------------------------------------|
-| `useNegativeWord`      | `boolean`    | `true`       | استفاده از کلمه "منفی"                 |
-| `customSeparator`      | `string`     | `" و "`     | جداکننده بین بخش‌ها                   |
-| `customLexicon`        | `Lexicon`    | پیش‌فرض فارسی | واژگان سفارشی                        |
-| `customDecimalSuffixes`| `string[]`   | پیش‌فرض فارسی | پسوندهای اعشاری                     |
-| `customNegativeWord`   | `string`     | `"منفی "`   | واژه منفی دلخواه                      |
-| `customZeroWord`       | `string`     | `"صفر"`     | معادل صفر دلخواه                      |
-| `customTimePrefix`     | `string`     | `"ساعت"`   | پیشوند زمان برای تبدیل زمان          |
-
-### Examples | مثال‌ها
-
-#### ✅ `useNegativeWord`
-
-```ts
-HarfizerConverter.toWords(-45, { useNegativeWord: false });
-// خروجی: "چهل و پنج"
-```
-
-#### ✅ `customSeparator`
-
-```ts
-HarfizerConverter.toWords(123456, { customSeparator: "، " });
-// خروجی: "یکصد و بیست و سه هزار، چهارصد و پنجاه و شش"
-```
-
-#### ✅ `customNegativeWord`
-
-```ts
-HarfizerConverter.toWords(-12, { customNegativeWord: "عدد منفی " });
-// خروجی: "عدد منفی دوازده"
-```
-
-#### ✅ `customZeroWord`
-
-```ts
-HarfizerConverter.toWords(0, { customZeroWord: "هیچ" });
-// خروجی: "هیچ"
-```
-
-#### ✅ `customDecimalSuffixes`
-
-```ts
-HarfizerConverter.toWords("0.04", {
-  customDecimalSuffixes: ["", "دهم", "صدم", "هزارم", "ده‌هزارم"]
-});
-// خروجی: "چهار صدم"
-```
-
-#### ✅ `customLexicon`
-
-```ts
-const funnyLexicon = [...]; // واژگان سفارشی خودتان
-
-HarfizerConverter.toWords(12, { customLexicon: funnyLexicon });
-// خروجی: بر اساس واژگان سفارشی
-```
-
-#### ✅ `customTimePrefix` (برای تبدیل زمان)
-
-```ts
-import { HarfizerConverter, ConversionOptions } from 'harfizer';
-
-const options: ConversionOptions = { customTimePrefix: "زمان" };
-const customConverter = new HarfizerConverter(options);
-
-console.log(customConverter.convertTimeToWords("09:05"));
-// خروجی مورد انتظار: "زمان نه و پنج دقیقه"
+```typescript
+converter.convertTripleToWords(789); 
+// Output: "seven hundred eighty-nine"
 ```
 
 ---
 
-## 🧱 Lexicon Structure | ساختار واژگان
+### `convertDateToWords(dateStr: string, calendar?: "jalali" | "gregorian"): string`
+Converts a Gregorian date string (formatted as "YYYY/MM/DD" or "YYYY-MM-DD") into its English textual representation in the format "Month Day, Year".
 
-```ts
-type Lexicon = [
-  units[],       // یک تا نه
-  tenToTwenty[], // ده تا بیست
-  tens[],        // بیست تا نود
-  hundreds[],    // یکصد تا نهصد
-  scales[]       // هزار، میلیون، میلیارد و ...
-];
+**Parameters:**
+- **dateStr:** The date string.
+- **calendar (optional):** For English, use "gregorian" (default is "gregorian").
+
+**Returns:**  
+A string representing the date in words.
+
+**Example:**
+
+```typescript
+converter.convertDateToWords("2023/04/05"); 
+// Output: "April 5, two thousand twenty-three"
 ```
 
 ---
 
-## 💼 Advanced Usage | استفاده پیشرفته
+### `convertTimeToWords(timeStr: string): string`
+Converts a time string in "HH:mm" format into its English textual representation.  
+If minutes are zero, returns "It is <hour> o'clock"; otherwise, returns "It is <hour> o'clock and <minute> minutes".
 
-### Instance-based usage:
+**Parameters:**
+- **timeStr:** A time string in "HH:mm" format.
 
-```ts
-const converter = new HarfizerConverter({ customZeroWord: "هیچ" });
+**Returns:**  
+A string representing the time in words.
 
-console.log(converter.convert("0.75"));
-// خروجی: "هفتاد و پنج صدم"
+**Example:**
+
+```typescript
+converter.convertTimeToWords("09:00"); 
+// Output: "It is nine o'clock"
+
+converter.convertTimeToWords("09:05"); 
+// Output: "It is nine o'clock and five minutes"
 ```
 
-### Convert Triple Digits Only | تبدیل تنها ارقام سه رقمی
+## Examples
 
-```ts
-console.log(converter.convertTripleToWords(215));
-// خروجی: "دویست و پانزده"
+Here is an example of using the `EnglishLanguagePlugin` with `CoreConverter`:
+
+```typescript
+import { CoreConverter, EnglishLanguagePlugin } from 'harfizer';
+
+const englishPlugin = new EnglishLanguagePlugin();
+const converter = new CoreConverter(englishPlugin);
+
+console.log(converter.convertNumber("123")); 
+// Output: "one hundred twenty-three"
+
+console.log(converter.convertDateToWords("2023/04/05")); 
+// Output: "April 5, two thousand twenty-three"
+
+console.log(converter.convertTimeToWords("09:05")); 
+// Output: "It is nine o'clock and five minutes"
 ```
 
----
+## Additional Options
 
-## 📆 Date Conversion | تبدیل تاریخ
+The `convertNumber` method accepts an optional `ConversionOptions` object for customizing conversion:
 
-Harfizer supports converting dates to their Persian word representation using the `convertDateToWords` method.  
-This method accepts a date string in either `YYYY/MM/DD` or `YYYY-MM-DD` format and an optional calendar type:
-- `"jalali"` for Solar dates (default)
-- `"gregorian"` for Gregorian dates
+```typescript
+const options = {
+  customZeroWord: "nil",
+  customNegativeWord: "negative",
+  customSeparator: " "
+};
 
-```ts
-import { HarfizerConverter } from 'harfizer';
-
-const converter = new HarfizerConverter();
-
-// Convert a Jalali (Solar) date:
-console.log(converter.convertDateToWords("1404-03-24"));
-// Expected Output: "بیست و چهار خرداد یک هزار و چهارصد و چهار"
-
-// Convert a Gregorian date:
-console.log(converter.convertDateToWords("2023-04-05", "gregorian"));
-// Expected Output: "پنج آوریل دو هزار و بیست و سه"
+console.log(converter.convertNumber("-123", options)); 
+// Output: "negative one hundred twenty-three"
 ```
 
----
+## Other Language Plugins Documentation
 
-## ⏰ Time Conversion | تبدیل زمان
+For documentation on other language plugins, please refer to the following files:
 
-Harfizer also converts digital time strings to Persian words using the `convertTimeToWords` method.  
-It accepts a time string in the format `"HH:mm"` and returns its Persian word representation.  
-A custom time prefix can be provided via `customTimePrefix` (default is `"ساعت"`).
+- [🇬🇧 EnglishLanguagePlugin Documentation](./README.md)
+- [🇮🇷 PersianLanguagePlugin Documentation](./docs/persian.md)
+- [🇫🇷 FrenchLanguagePlugin Documentation](./docs/french.md)
+- [🇯🇵 JapaneseLanguagePlugin Documentation](./docs/japanese.md)
+- [🇨🇳 ChineseLanguagePlugin Documentation](./docs/chinese.md)
+- [🇷🇺 RussianLanguagePlugin Documentation](./docs/russian.md)
+- [🇩🇪 GermanLanguagePlugin Documentation](./docs/german.md)
+- [🇪🇸 SpanishLanguagePlugin Documentation](./docs/spanish.md)
 
-```ts
-import { HarfizerConverter } from 'harfizer';
 
-const converter = new HarfizerConverter();
 
-console.log(converter.convertTimeToWords("09:05"));
-// Expected Output: "ساعت نه و پنج دقیقه"
+## License
 
-console.log(converter.convertTimeToWords("18:00"));
-// Expected Output: "ساعت هجده"
-```
+This package is licensed under the MIT License.
 
----
-
-## 📏 Limitations | محدودیت‌ها
-
-- **عدد:** حداکثر عدد ورودی 66 رقم (برای اعداد صحیح)
-- **اعشار:** پشتیبانی از حداکثر 11 رقم اعشار
-- **تاریخ:** فرمت‌های پشتیبانی شده `YYYY/MM/DD` و `YYYY-MM-DD`
-- **زمان:** فرمت پشتیبانی شده برای زمان تنها `"HH:mm"` است.
-- ورودی فقط باید عددی (برای تبدیل عدد) یا رشته‌های معتبر برای تاریخ و زمان باشد.
-
----
-
-## 📚 License | مجوز
-
-**MIT License**  
-کاملاً متن‌باز و رایگان برای استفاده تجاری و شخصی.
